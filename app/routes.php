@@ -2,18 +2,23 @@
 
 use Framework\Routing\Router;
 return function(Router $router) {
+    // $router->add(
+    //     'GET', '/',
+    //     fn() => 'hello world',
+    // );
+
     $router->add(
-    'GET', '/',
-    fn() => 'hello world',
+        'GET', '/',
+        fn() => view('home', ['number' => 42]),
     );
     $router->add(
-    'GET', '/old-home',
-    fn() => $router->redirect('/'),
+        'GET', '/old-home',
+        fn() => $router->redirect('/'),
     );
 
     $router->add(
-    'GET', '/has-server-error',
-    fn() => throw new Exception(),
+        'GET', '/has-server-error',
+        fn() => throw new Exception(),
     );
 
     $router->add(
@@ -28,7 +33,10 @@ return function(Router $router) {
         'GET', '/products/view/{product}',
         function () use ($router) {
             $parameters = $router->current()->parameters();
-            return "product is {$parameters['product']}";
+            return view('products/view', [
+                    'product' => $parameters['product'],
+                    'scary' => '<script>alert("boo!")</script>',
+            ]);
         },
     );
 
@@ -52,4 +60,6 @@ return function(Router $router) {
             return "products for page {$parameters['page']}";
         },
     )->name('product-list');
+
+   
 };
